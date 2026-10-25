@@ -5,7 +5,9 @@ LARGE_DISCOUNT = 0.14
 PARTNER_DISCOUNT = 0.04
 SHIPPING_THRESHOLD = 250
 SHIPPING_FEE = 35
-
+PREPAYMENT_THRESHOLD = 1500
+PALLET_MIN_BAGS = 60
+PALLET_MIN_TOTAL = 700
 
 def calculate_bean_cost(bag_price: float, bags: int) -> float:
     """Calculate the cost of coffee bags before discounts."""
@@ -41,4 +43,8 @@ def calculate_shipment_total(
 
 def requires_prepayment(shipment_total: float) -> bool:
     """Return True if the shipment requires prepayment."""
-    return shipment_total >= 1500
+    return shipment_total >= PREPAYMENT_THRESHOLD
+
+def requires_freight_pallet(bags: int, shipment_total: float) -> bool:
+    """Return True if the shipment requires a freight pallet."""
+    return bags > PALLET_MIN_BAGS and shipment_total > PALLET_MIN_TOTAL

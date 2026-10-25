@@ -2,6 +2,7 @@ from business_rules import (
     calculate_bean_cost,
     calculate_shipment_total,
     get_bulk_discount,
+    requires_freight_pallet,
     requires_prepayment,
 )
 
@@ -25,4 +26,10 @@ def test_calculate_shipment_total():
 def test_requires_prepayment():
     assert requires_prepayment(1499.99) is False
     assert requires_prepayment(1500.00) is True
-    assert requires_prepayment(2000.00) is True    
+    assert requires_prepayment(2000.00) is True
+
+def test_requires_freight_pallet():
+    assert requires_freight_pallet(60, 800) is False
+    assert requires_freight_pallet(61, 700) is False
+    assert requires_freight_pallet(61, 700.01) is True
+    assert requires_freight_pallet(80, 1000) is True   

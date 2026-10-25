@@ -45,3 +45,13 @@ ruff check .
 git add business_rules.py tests/test_business_rules.py commands.md
 git commit -m "Part 2: Add prepayment requirement and tests"
 git push
+
+## Part 2: Freight Pallet Requirement
+
+pytest -v
+ruff check .
+ruff check . --fix
+ruff check .
+git add business_rules.py tests/test_business_rules.py commands.md
+git commit -m "Part 2: Add freight pallet requirement and tests"
+git push
