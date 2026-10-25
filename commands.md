@@ -63,5 +63,14 @@ ruff check .
 ruff check . --fix
 ruff check .
 git add business_rules.py tests/test_business_rules.py commands.md
-git commit -m "Part 2: Add shipment summary and formatting functions with tests"
+git commit -m "Part 2: Add total_shipped, largest_shipment, format_shipment_line, and tests"
 git push
+
+## Part 3 - Shipment Report
+
+python3 main.py
+ruff check .
+git status
+git add main.py commands.md
+git commit -m "Part 3: Complete shipment report and summary calculations"
+git push origin main
