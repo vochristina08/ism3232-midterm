@@ -1,4 +1,8 @@
-from business_rules import calculate_bean_cost, get_bulk_discount
+from business_rules import (
+    calculate_bean_cost,
+    calculate_shipment_total,
+    get_bulk_discount,
+)
 
 
 def test_calculate_bean_cost():
@@ -11,3 +15,8 @@ def test_get_bulk_discount():
     assert get_bulk_discount(80) == 0.14
     assert get_bulk_discount(20, True) == 0.13
     assert round(get_bulk_discount(80, True), 2) == 0.18
+
+def test_calculate_shipment_total():
+    assert calculate_shipment_total(10.00, 10) == 135.00
+    assert calculate_shipment_total(10.00, 20) == 217.00
+    assert calculate_shipment_total(10.00, 30) == 273.00
