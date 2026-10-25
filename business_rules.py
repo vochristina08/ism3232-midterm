@@ -38,3 +38,7 @@ def calculate_shipment_total(
         return discounted_cost + SHIPPING_FEE
 
     return discounted_cost
+
+def requires_prepayment(shipment_total: float) -> bool:
+    """Return True if the shipment requires prepayment."""
+    return shipment_total >= 1500

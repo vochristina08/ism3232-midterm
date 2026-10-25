@@ -30,3 +30,18 @@ git push
 
 pytest -v
 ruff check .
+ruff check . --fix
+ruff check .
+git add business_rules.py tests/test_business_rules.py
+git commit -m "Part 2: Add shipment total function and tests"
+git push
+
+## Part 2: Prepayment Requirement
+
+pytest -v
+ruff check .
+ruff check . --fix
+ruff check .
+git add business_rules.py tests/test_business_rules.py commands.md
+git commit -m "Part 2: Add prepayment requirement and tests"
+git push
