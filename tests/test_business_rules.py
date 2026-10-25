@@ -1,9 +1,12 @@
 from business_rules import (
     calculate_bean_cost,
     calculate_shipment_total,
+    format_shipment_line,
     get_bulk_discount,
-    requires_freight_pallet,
+    largest_shipment,
+    needs_pallet,
     requires_prepayment,
+    total_shipped,
 )
 
 
@@ -28,8 +31,33 @@ def test_requires_prepayment():
     assert requires_prepayment(1500.00) is True
     assert requires_prepayment(2000.00) is True
 
-def test_requires_freight_pallet():
-    assert requires_freight_pallet(60, 800) is False
-    assert requires_freight_pallet(61, 700) is False
-    assert requires_freight_pallet(61, 700.01) is True
-    assert requires_freight_pallet(80, 1000) is True   
+def test_needs_pallet():
+    assert needs_pallet(60, 800) is False
+    assert needs_pallet(61, 700) is False
+    assert needs_pallet(61, 700.01) is True
+    assert needs_pallet(80, 1000) is True
+
+def test_total_shipped():
+    shipments = [
+        {"buyer": "A", "bag_price": 10.00, "bags": 10, "partner": False},
+        {"buyer": "B", "bag_price": 10.00, "bags": 20, "partner": False},
+    ]
+    assert total_shipped(shipments) == 352.00
+    assert total_shipped([]) == 0.0
+
+def test_largest_shipment():
+    shipments = [
+        {"buyer": "A", "bag_price": 10.00, "bags": 10, "partner": False},
+        {"buyer": "B", "bag_price": 10.00, "bags": 20, "partner": False},
+        {"buyer": "C", "bag_price": 10.00, "bags": 20, "partner": False},
+    ]
+    assert largest_shipment(shipments) == "B"
+    assert largest_shipment([]) == ""
+
+def test_format_shipment_line():
+    assert format_shipment_line("Uptown Bakery", 175.00, False, False) == (
+        "Uptown Bakery: $175.00 | prepayment: no | pallet: no"
+    )
+    assert format_shipment_line("Zenith Grocers", 1892.00, True, True) == (
+        "Zenith Grocers: $1892.00 | prepayment: yes | pallet: yes"
+    )

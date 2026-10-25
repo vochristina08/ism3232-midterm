@@ -55,3 +55,13 @@ ruff check .
 git add business_rules.py tests/test_business_rules.py commands.md
 git commit -m "Part 2: Add freight pallet requirement and tests"
 git push
+
+## Part 2: Shipment Totals, Largest Shipment, and Report Formatting
+
+pytest -v
+ruff check .
+ruff check . --fix
+ruff check .
+git add business_rules.py tests/test_business_rules.py commands.md
+git commit -m "Part 2: Add shipment summary and formatting functions with tests"
+git push

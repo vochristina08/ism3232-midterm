@@ -41,10 +41,53 @@ def calculate_shipment_total(
 
     return discounted_cost
 
-def requires_prepayment(shipment_total: float) -> bool:
+def requires_prepayment(total: float) -> bool:
     """Return True if the shipment requires prepayment."""
-    return shipment_total >= PREPAYMENT_THRESHOLD
+    return total >= PREPAYMENT_THRESHOLD
 
-def requires_freight_pallet(bags: int, shipment_total: float) -> bool:
-    """Return True if the shipment requires a freight pallet."""
-    return bags > PALLET_MIN_BAGS and shipment_total > PALLET_MIN_TOTAL
+def needs_pallet(bags: int, total: float) -> bool:
+    """Return True when a shipment requires a freight pallet."""
+    return bags > PALLET_MIN_BAGS and total > PALLET_MIN_TOTAL
+
+def total_shipped(shipments: list) -> float:
+    """Return the sum of all shipment totals."""
+    total = 0.0
+
+    for shipment in shipments:
+        total += calculate_shipment_total(
+            shipment["bag_price"],
+            shipment["bags"],
+            shipment["partner"],
+        )
+
+    return total
+
+def largest_shipment(shipments: list) -> str:
+    """Return the buyer with the largest shipment total."""
+    largest_buyer = ""
+    largest_total = 0.0
+
+    for shipment in shipments:
+        total = calculate_shipment_total(
+            shipment["bag_price"],
+            shipment["bags"],
+            shipment["partner"],
+        )
+
+        if largest_buyer == "" or total > largest_total:
+            largest_total = total
+            largest_buyer = shipment["buyer"]
+
+    return largest_buyer
+
+def format_shipment_line(
+    buyer: str, total: float, prepayment: bool, pallet: bool
+) -> str:
+    """Return a formatted shipment report line."""
+    prepayment_text = "yes" if prepayment else "no"
+    pallet_text = "yes" if pallet else "no"
+
+    return (
+        f"{buyer}: ${total:.2f} | "
+        f"prepayment: {prepayment_text} | pallet: {pallet_text}"
+    )
