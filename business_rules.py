@@ -9,9 +9,11 @@ PREPAYMENT_THRESHOLD = 1500
 PALLET_MIN_BAGS = 60
 PALLET_MIN_TOTAL = 700
 
+
 def calculate_bean_cost(bag_price: float, bags: int) -> float:
     """Calculate the cost of coffee bags before discounts."""
     return bag_price * bags
+
 
 def get_bulk_discount(bags: int, partner: bool = False) -> float:
     """Return the discount rate based on bag count and partner status."""
@@ -41,13 +43,16 @@ def calculate_shipment_total(
 
     return discounted_cost
 
+
 def requires_prepayment(total: float) -> bool:
     """Return True if the shipment requires prepayment."""
     return total >= PREPAYMENT_THRESHOLD
 
+
 def needs_pallet(bags: int, total: float) -> bool:
     """Return True when a shipment requires a freight pallet."""
     return bags > PALLET_MIN_BAGS and total > PALLET_MIN_TOTAL
+
 
 def total_shipped(shipments: list) -> float:
     """Return the sum of all shipment totals."""
@@ -61,6 +66,7 @@ def total_shipped(shipments: list) -> float:
         )
 
     return total
+
 
 def largest_shipment(shipments: list) -> str:
     """Return the buyer with the largest shipment total."""
@@ -80,6 +86,7 @@ def largest_shipment(shipments: list) -> str:
 
     return largest_buyer
 
+
 def format_shipment_line(
     buyer: str, total: float, prepayment: bool, pallet: bool
 ) -> str:
@@ -88,6 +95,5 @@ def format_shipment_line(
     pallet_text = "yes" if pallet else "no"
 
     return (
-        f"{buyer}: ${total:.2f} | "
-        f"prepayment: {prepayment_text} | pallet: {pallet_text}"
+        f"{buyer}: ${total:.2f} | prepayment: {prepayment_text} | pallet: {pallet_text}"
     )
