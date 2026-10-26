@@ -74,3 +74,14 @@ git status
 git add main.py commands.md
 git commit -m "Part 3: Complete shipment report and summary calculations"
 git push origin main
+
+## Part 4 - Pytest Tests
+
+pytest -v
+ruff check .
+ruff check . --fix
+ruff check .
+git status
+git add tests/test_business_rules.py commands.md
+git commit -m "Part 4: Add 24 pytest tests for business rules"
+git push origin main

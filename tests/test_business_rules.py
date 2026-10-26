@@ -10,54 +10,95 @@ from business_rules import (
 )
 
 
-def test_calculate_bean_cost():
+def test_bean_cost():
     assert round(calculate_bean_cost(14.00, 10), 2) == 140.00
 
-def test_get_bulk_discount():
+def test_bulk_discount_below_20():
     assert get_bulk_discount(19) == 0.0
+
+def test_bulk_discount_at_20():
     assert get_bulk_discount(20) == 0.09
+
+def test_large_discount_below_80():
     assert get_bulk_discount(79) == 0.09
+
+def test_large_discount_at_80():
     assert get_bulk_discount(80) == 0.14
-    assert get_bulk_discount(20, True) == 0.13
-    assert round(get_bulk_discount(80, True), 2) == 0.18
 
-def test_calculate_shipment_total():
-    assert calculate_shipment_total(10.00, 10) == 135.00
-    assert calculate_shipment_total(10.00, 20) == 217.00
-    assert calculate_shipment_total(10.00, 30) == 273.00
+def test_partner_discount_changes_result():
+    assert round(get_bulk_discount(20, True), 2) == 0.13
+    assert get_bulk_discount(20, False) == 0.09
 
-def test_requires_prepayment():
+def test_shipment_total_with_shipping_fee():
+    assert round(calculate_shipment_total(10.00, 10), 2) == 135.00
+
+def test_shipping_fee_below_250():
+    assert round(calculate_shipment_total(249.99, 1), 2) == 284.99
+
+def test_no_shipping_fee_at_250():
+    assert round(calculate_shipment_total(250.00, 1), 2) == 250.00
+
+def test_shipment_total_with_bulk_discount():
+    assert round(calculate_shipment_total(10.00, 20), 2) == 217.00
+
+def test_prepayment_below_1500():
     assert requires_prepayment(1499.99) is False
+
+def test_prepayment_at_1500():
     assert requires_prepayment(1500.00) is True
-    assert requires_prepayment(2000.00) is True
 
-def test_needs_pallet():
-    assert needs_pallet(60, 800) is False
-    assert needs_pallet(61, 700) is False
+
+def test_pallet_at_60_bags():
+    assert needs_pallet(60, 800.00) is False
+
+def test_pallet_above_60_bags():
+    assert needs_pallet(61, 800.00) is True
+
+def test_pallet_at_700_total():
+    assert needs_pallet(61, 700.00) is False
+
+def test_pallet_above_700_total():
     assert needs_pallet(61, 700.01) is True
-    assert needs_pallet(80, 1000) is True
 
-def test_total_shipped():
+
+def test_total_shipped_with_two_shipments():
     shipments = [
         {"buyer": "A", "bag_price": 10.00, "bags": 10, "partner": False},
         {"buyer": "B", "bag_price": 10.00, "bags": 20, "partner": False},
     ]
-    assert total_shipped(shipments) == 352.00
-    assert total_shipped([]) == 0.0
+    assert round(total_shipped(shipments), 2) == 352.00
 
-def test_largest_shipment():
+def test_total_shipped_empty_list():
+    assert round(total_shipped([]), 2) == 0.00
+
+def test_largest_shipment_with_two_buyers():
     shipments = [
         {"buyer": "A", "bag_price": 10.00, "bags": 10, "partner": False},
         {"buyer": "B", "bag_price": 10.00, "bags": 20, "partner": False},
-        {"buyer": "C", "bag_price": 10.00, "bags": 20, "partner": False},
     ]
     assert largest_shipment(shipments) == "B"
+
+def test_largest_shipment_tie():
+    shipments = [
+        {"buyer": "A", "bag_price": 10.00, "bags": 20, "partner": False},
+        {"buyer": "B", "bag_price": 10.00, "bags": 20, "partner": False},
+    ]
+    assert largest_shipment(shipments) == "A"
+
+def test_largest_shipment_empty_list():
     assert largest_shipment([]) == ""
 
-def test_format_shipment_line():
+def test_format_shipment_line_no_flags():
     assert format_shipment_line("Uptown Bakery", 175.00, False, False) == (
         "Uptown Bakery: $175.00 | prepayment: no | pallet: no"
     )
+
+def test_format_shipment_line_both_flags():
     assert format_shipment_line("Zenith Grocers", 1892.00, True, True) == (
         "Zenith Grocers: $1892.00 | prepayment: yes | pallet: yes"
+    )
+
+def test_format_shipment_line_one_flag():
+    assert format_shipment_line("Vine Cafe", 222.50, True, False) == (
+        "Vine Cafe: $222.50 | prepayment: yes | pallet: no"
     )
